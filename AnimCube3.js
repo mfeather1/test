@@ -1439,7 +1439,10 @@ function AnimCube3(params) {
 
             // trough
             graphics.fillStyle = sliderBgColor;
-            graphics.fillRect(dph, height - progressHeight - dph, width - dpr, progressHeight);
+            if (transparent)
+              graphics.clearRect(dph, height - progressHeight - dph, width - dpr, progressHeight);
+            else
+              graphics.fillRect(dph, height - progressHeight - dph, width - dpr, progressHeight);
 
             // slider
             graphics.fillStyle = sliderColor;
@@ -1895,7 +1898,10 @@ function AnimCube3(params) {
         g.fillStyle = darker(buttonBgColor);
       else
         g.fillStyle = buttonBgColor;
-      g.fillRect(dph, height - buttonHeight, buttonHeight, buttonHeight);
+      if (transparent)
+        g.clearRect(dph, height - buttonHeight, buttonHeight, buttonHeight);
+      else
+        g.fillRect(dph, height - buttonHeight, buttonHeight, buttonHeight);
       g.lineWidth = lineWidth;
       g.strokeStyle = buttonBorderColor;
       g.beginPath();
@@ -1912,7 +1918,10 @@ function AnimCube3(params) {
           g.fillStyle = darker(buttonBgColor);
         else
           g.fillStyle = buttonBgColor;
-        g.fillRect(buttonX, height, buttonWidth, buttonHeight);
+        if (transparent)
+          g.clearRect(buttonX, height, buttonWidth, buttonHeight);
+        else
+          g.fillRect(buttonX, height, buttonWidth, buttonHeight);
         g.lineWidth = lineWidth;
         g.strokeStyle = buttonBorderColor;
         g.beginPath();
