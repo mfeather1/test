@@ -237,11 +237,7 @@ function AnimCube3(params) {
     colors[23] = rgbToHex(128, 128, 128);  // . - gray
     // setup window background color
     var param = getParameter("bgcolor");
-    if (param == 'transparent') {
-      transparent = 1;
-      bgColor = "gray";
-    }
-    else if (param != null && param.length == 6) {
+    if (param != null && param.length == 6) {
       if (validateColor(param))
         bgColor = "#" + param;
       else
@@ -249,6 +245,9 @@ function AnimCube3(params) {
     }
     else
       bgColor = "gray";
+    var param = getParameter("transparent");
+    if (param == '1')
+      transparent = 1;
     // setup button bar background color
     param = getParameter("butbgcolor");
     if (param != null && param.length == 6) {
