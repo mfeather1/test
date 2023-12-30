@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+ <title>Animation Interrupts</title>
+ <meta name=viewport content="width=device-width, initial-scale=1">
+ <meta name="author" content="Michael Feather">
+ <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
+ <script src=AnimCube3.js></script>
+ <style> 
+  body {margin-left: 10%; margin-right: 10%;}
+  p {margin:0; text-align: justify;}
+ </style>
+</head>
+<body>
+<center>
+<font size=+2>Animation Interrupts</font>
+<br><br>
+<p>When the stop button is pressed while a sequence is playing the animation
+will stop immediately as as can be seen on the first cube below by pressing
+play and then stop (middle button).
+On the second cube a bit of javascript is used to handle the interrupt so
+that animation of the current move will complete instead of stopping 
+immediately.</p>
+<table>
+ <tr height=5>
+ <tr>
+  <td><div id=c1 style="width:200px; height:200px"></div></td>
+  <td width=70>
+  <td><div id=c2 style="width:200px; height:200px"></div></td>
+ </tr>
+</table>
+<br><br>
+<p>On the first cube below, each subsequent input move (via buttons or
+letters) will interrupt the currently playing move if entered quickly as
+can be seen on the first cube below.
+With a bit of javascript, input moves do not interrupt animation already
+in progress (they queue up) as can be seen on the second cube.</p>
+<table>
+ <tr>
+  <td><div id=c3 style="width:180px; height:180px"></div></td>
+  <td width=40>
+  <td><div id=c4 style="width:180px; height:180px"></div></td>
+ </tr>
+</table>
+
+<table class=tab border=0><tr><td width=20>
+<td><button onclick="cubeMove('c3','R')">R</button></td>
+<td><button onclick="cubeMove('c1','L')">L</button></td>
+<td><button onclick="cubeMove('c3','U')">U</button></td>
+<td><button onclick="cubeMove('c3','D')">D</button></td>
+<td><button onclick="cubeMove('c3','F')">F</button></td>
+<td colspan=2><button onclick="cubeMove('c3','B')">B</button></td>
+<td width=50>
+<td><button onclick="cubeMove('c4','R')">R</button></td>
+<td><button onclick="cubeMove('c4','L')">L</button></td>
+<td><button onclick="cubeMove('c4','U')">U</button></td>
+<td><button onclick="cubeMove('c4','D')">D</button></td>
+<td><button onclick="cubeMove('c4','F')">F</button></td>
+<td><button onclick="cubeMove('c4','B')">B</button></td>
+</tr><tr height=5px><tr><td>
+<td><button onclick="cubeMove('c3','X')">X</button></td>
+<td><button onclick="cubeMove('c3','Y')">Y</button></td>
+<td><button onclick="cubeMove('c3','Z')">Z</button></td>
+<td colspan=2><button onclick="cubeRepos('c3')">Repos</button></td>
+<td colspan=3><button onclick="cubeReset('c3')">Reset</button></td>
+<td><button onclick="cubeMove('c4','X')">X</button></td>
+<td><button onclick="cubeMove('c4','Y')">Y</button></td>
+<td><button onclick="cubeMove('c4','Z')">Z</button></td>
+<td colspan=2><button onclick="cubeRepos('c4')">Repos</button></td>
+<td colspan=2><button onclick="cubeReset('c4')">Reset</button></td>
+</tr></table>
+
+<!--
+<table border=0><tr><td width=40><td>
+<button onclick="cubeMove('c3','R')">R</button>&nbsp;
+<button onclick="cubeMove('c3','L')">L</button>&nbsp;
+<button onclick="cubeMove('c3','U')">U</button>&nbsp;
+<button onclick="cubeMove('c3','D')">D</button>&nbsp;
+<button onclick="cubeMove('c3','F')">F</button>&nbsp;
+<button onclick="cubeMove('c3','B')">B</button>&nbsp;
+</td><td width=30><td>
+<button onclick="cubeMove('c4','R')">R</button>&nbsp;
+<button onclick="cubeMove('c4','L')">L</button>&nbsp;
+<button onclick="cubeMove('c4','U')">U</button>&nbsp;
+<button onclick="cubeMove('c4','D')">D</button>&nbsp;
+<button onclick="cubeMove('c4','F')">F</button>&nbsp;
+<button onclick="cubeMove('c4','B')">B</button>
+</td></tr><tr height=5px><tr><td><td>
+<button onclick="cubeMove('c3','X')">X</button>&nbsp;
+<button onclick="cubeMove('c3','Y')">Y</button>&nbsp;
+<button onclick="cubeMove('c3','Z')">Z</button>&nbsp;
+<button onclick="cubeRepos('c3')">Repos</button>&nbsp;
+<button onclick="cubeReset('c3')">Reset</button>&nbsp;
+</td><td><td>
+<button onclick="cubeMove('c4','X')">X</button>&nbsp;
+<button onclick="cubeMove('c4','Y')">Y</button>&nbsp;
+<button onclick="cubeMove('c4','Z')">Z</button>&nbsp;
+<button onclick="cubeRepos('c4')">Repos</button>&nbsp;
+<button onclick="cubeReset('c4')">Reset</button>
+</td></tr></table>
+-->
+<br>
+<a href=javascript:history.go(-1)>Back</a>
+<br><br>
+<script>
+var gid = 'c1';
+var acjs_move = [];
+var acjs_getMove = [];
+var acjs_startAnimation = [];
+var acjs_stopAnimation = [];
+var acjs_eye = [];
+var acjs_eyeX = [];
+var acjs_eyeY = [];
+var acjs_initialEye = [];
+var acjs_initialEyeX = [];
+var acjs_initialEyeY = [];
+var acjs_vCopy = [];
+var acjs_paint = [];
+var acjs_clear = [];
+var acjs_get_var = [];
+var acjs_put_var = [];
+var acjs_parNode = [];
+var acjs_run = [];
+var p1 = '&bgcolor=ffffff&move=R2U2F2L2B2D2;L2D2B2R2U2F2&snap=1&fonttype=0&buttonheight=18&textsize=16';
+var p2 = '&bgcolor=ffffff&buttonbar=0&counter=0&snap=1';
+document.addEventListener("keydown", keydown);
+document.addEventListener("mousedown", mousedown);
+AnimCube3('id=c1' + p1);
+AnimCube3('id=c2' + p1);
+AnimCube3('id=c3' + p2);
+AnimCube3('id=c4' + p2);
+acjs_put_var['c2']('interruptLevel', 1, 'n');
+acjs_put_var['c4']('interruptLevel', 0, 'n');
+function cubeMove(id, mv) {
+  if (acjs_get_var[id]('interruptLevel') == 0) {
+    // use a queue to keep the move array in sync with the
+    // animation for interruptLevel = 0
+    var job = acjs_get_var[id]('jobNumber');
+    run(id, job, mv);
+    acjs_put_var[id]('jobNumber', job+1, 'n');
+  }
+  else { 
+    acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
+    acjs_startAnimation[id](0);
+  }
+}
+function run(id, job, mv) {
+  var n = acjs_get_var[id]('nowServing');
+  if (job > n) {
+    setTimeout(run, 20, id, job, mv);
+    return;
+  }
+  acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
+  acjs_put_var[id]('moveAnimated', 1, 'n');
+  acjs_run[id](mv, 1);
+}
+function mousedown(e) {
+  if (typeof e.target.parentNode.id != 'undefined') {
+    var s = e.target.parentNode.id;
+    if (typeof acjs_parNode[s] != 'undefined')
+      gid = s; 
+  }
+}
+function keydown(e) {
+  var mlist = ['x','y','z','r','l','u','d','f','b'];
+  if (mlist.includes(e.key)) {
+    var mv = e.key;
+    if (['r','l','u','d','f','b'].includes(mv))
+      mv = mv.toUpperCase();
+    cubeMove(gid, mv);
+  }
+}
+function cubeRepos(id) {
+  var vCopy = acjs_vCopy[id];
+  vCopy(acjs_eye[id], acjs_initialEye[id]);
+  vCopy(acjs_eyeX[id], acjs_initialEyeX[id]);
+  vCopy(acjs_eyeY[id], acjs_initialEyeY[id]);
+  acjs_paint[id]();
+}
+function cubeReset(id) {
+  if (acjs_get_var[id]('animating')) {
+    acjs_stopAnimation[id]();
+    setTimeout(cubeReset, 10, id);
+  }
+  else
+    acjs_clear[id]();
+}
+</script>
+</center>
+</body>
+</html>

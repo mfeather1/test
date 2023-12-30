@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+ <title>JS Buttons - Demo 1</title>
+ <meta name=viewport content="width=device-width, initial-scale=1">
+ <meta name="author" content="Michael Feather">
+ <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
+ <script src=AnimCube3.js></script>
+ <style> 
+  body {margin-left: 10%; margin-right: 10%;}
+  p {margin:0; text-align: justify;}
+ </style>
+</head>
+<body>
+<center>
+<font size=+2>JS Buttons<br>Demo 1</font>
+<br><br>
+<p>This demo shows how to use javascript buttons to duplicate the
+functionality of the buttonbar.</p>
+<div id=c1 style="width:180px; height:180px"></div></td>
+<br>
+<button onclick="btn('c1',0)">reset</button>
+<button onclick="btn('c1',1)">back1</button>
+<button onclick="btn('c1',2)">back</button>
+<button onclick="btn('c1',3)">mir/stop</button>
+<button onclick="btn('c1',4)">play</button>
+<button onclick="btn('c1',5)">step</button>
+<button onclick="btn('c1',6)">end</button>
+<br><br>
+<a href=javascript:history.go(-1)>Back</a>
+<br><br>
+<script>
+var acjs_button = [];
+AnimCube3("id=c1&bgcolor=ffffff&move=RU'LFU'R2U2RUR'U2D'LDF2L2U&buttonheight=18&textsize=16&fonttype=0");
+function btn(id, n) {
+  acjs_button[id](n);
+}
+</script>
+</center>
+</body>
+</html>
