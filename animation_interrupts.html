@@ -19,10 +19,11 @@
 will stop immediately as as can be seen on the first cube below by pressing
 play and then stop (middle button).
 On the second cube a bit of javascript is used to handle the interrupt so
-that animation of the current move will complete instead of stopping 
-immediately. [note: the second sequence is to show that there is no reset
-bug, that will be removed prior to installing this page on the AnimCubeJS
-repo].
+that if the stop is pressed while a sequence is playing (via the play button)
+animation of the current move will complete instead of stopping immediately
+(pressing stop during a single step move still stops immediately).
+[note: the second sequence is to show that there is no reset bug, that will
+be removed prior to installing this page on the AnimCubeJS repo].
 </p>
 <table>
  <tr height=5>
@@ -48,7 +49,7 @@ in progress (they queue up) as can be seen on the second cube.</p>
 
 <table class=tab border=0><tr><td width=20>
 <td><button onclick="cubeMove('c3','R')">R</button></td>
-<td><button onclick="cubeMove('c1','L')">L</button></td>
+<td><button onclick="cubeMove('c3','L')">L</button></td>
 <td><button onclick="cubeMove('c3','U')">U</button></td>
 <td><button onclick="cubeMove('c3','D')">D</button></td>
 <td><button onclick="cubeMove('c3','F')">F</button></td>
