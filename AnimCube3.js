@@ -2515,7 +2515,7 @@ function AnimCube3(params) {
     }
     else if (buttonPressed == 7 || buttonPressed == 8) { // next sequence
       stopAnimation();
-      // setTimeout(clear, 20);
+      setTimeout(clear, 20);
       if (buttonPressed == 7)
         curMove = curMove > 0 ? curMove - 1 : move.length - 1;
       else
