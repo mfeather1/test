@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+ <title>Transparent Background</title>
+ <meta name=viewport content="width=device-width, initial-scale=1">
+ <meta name="author" content="Michael Feather">
+ <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
+ <script src=A3_transparent.js></script>
+ <style>
+  body {
+    margin-left: 10%; margin-right: 10%;
+    background-image: linear-gradient(45deg, #555555, black);
+    color:white;
+  }
+  p {margin:0; text-align: justify;}
+ </style>
+</head>
+<body>
+<center>
+<font size=+2>Transparent Background</font>
+<br><br>
+<p>This cube uses a modified version of AnimCube3.js for transparency
+as described below.</p>
+<div style="width:180px; height:180px">
+ <script>AnimCube3("transparent=1&move=RU'LFU'R2U2RUR'U2D'LDF2L2U&buttonheight=18&textsize=16&fonttype=0&bgcolor=000000")</script>
+</div>
+<br>
+<p>Code mods:
+<br><br>
+To make the cube background transparent change the first occurrence of 
+fillRect to clearRect in the paint function.
+To make the trough transparent do the same for the second occurrence.
+For a transparent slider with only a vertical bar showing progress in a
+transparent trough, change the whole line for the third occurrence to the
+following (do not change fillRect to clearRect):
+<br><br>
+graphics.fillRect(progress-dpr*2, height - progressHeight - dph, dpr*2, progressHeight);
+<br><br>
+To make the buttonbar transparent change both occurrences of fillRect to
+clearRect in the drawbuttons function (first one is for clear button only,
+second one is for full buttonbar).
+To make the cube color transparent, in the fixblock function add the
+following line right after where it says: "find and draw black inner faces".
+<br><br>
+graphics.globalCompositeOperation = 'destination-out';
+<br><br>
+Also add the following line right before where it says:
+"draw all visible faces and get dragging regions".
+<br><br>
+graphics.globalCompositeOperation = 'source-over';
+<br><br>
+To change the button bar border color to white (for dark background) use
+param bgcolor=000000.</p>
+<br>
+<a href=javascript:history.go(-1)>Back</a>
+<br><br>
+</center>
+</body>
+</html>
