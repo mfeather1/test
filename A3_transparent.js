@@ -1351,7 +1351,7 @@ function AnimCube3(params) {
     graphics.fillStyle = bgColor;
     var h = (buttonBar == 1 && (progressHeight == 0 || demo || move[curMove].length == 0)) ? height - dpr : height;
     setClip(graphics, 0, 0, width, h);
-    graphics.fillRect(0, 0, width, h); // cube background
+    graphics.clearRect(0, 0, width, h); // cube background
     dragAreas = 0;
     if (natural) // compact cube
     {
@@ -1431,11 +1431,12 @@ function AnimCube3(params) {
 
             // trough
             graphics.fillStyle = sliderBgColor;
-            graphics.fillRect(dph, height - progressHeight - dph, width - dpr, progressHeight);
+            graphics.clearRect(dph, height - progressHeight - dph, width - dpr, progressHeight);
 
             // slider
             graphics.fillStyle = sliderColor;
-            graphics.fillRect(dph, height - progressHeight - dph, progress, progressHeight);
+            // graphics.fillRect(dph, height - progressHeight - dph, progress, progressHeight);
+            graphics.fillRect(progress-dpr*2, height - progressHeight - dph, dpr*2, progressHeight);
 
             // border
             graphics.beginPath();
@@ -1575,6 +1576,7 @@ function AnimCube3(params) {
       }
     }
     // find and draw black inner faces
+    graphics.globalCompositeOperation = 'destination-out';
     for (var i = 0; i < 6; i++) { // all faces
       var sideW = blocks[i][0][1] - blocks[i][0][0];
       var sideH = blocks[i][1][1] - blocks[i][1][0];
@@ -1595,6 +1597,7 @@ function AnimCube3(params) {
         fillPolygon(graphics, fillX, fillY, cubeColor);
       }
     }
+    graphics.globalCompositeOperation = 'source-over';
     // draw all visible faces and get dragging regions
     for (var i = 0; i < 6; i++) { // all faces
       vSub(vScale(vCopy(perspEye, eye), 5.0 + persp), faceNormals[i]); // perspective correction
@@ -1887,7 +1890,7 @@ function AnimCube3(params) {
         g.fillStyle = darker(buttonBgColor);
       else
         g.fillStyle = buttonBgColor;
-      g.fillRect(dph, height - buttonHeight, buttonHeight, buttonHeight);
+      g.clearRect(dph, height - buttonHeight, buttonHeight, buttonHeight);
       g.lineWidth = lineWidth;
       g.strokeStyle = buttonBorderColor;
       g.beginPath();
@@ -1904,7 +1907,7 @@ function AnimCube3(params) {
           g.fillStyle = darker(buttonBgColor);
         else
           g.fillStyle = buttonBgColor;
-        g.fillRect(buttonX, height, buttonWidth, buttonHeight);
+        g.clearRect(buttonX, height, buttonWidth, buttonHeight);
         g.lineWidth = lineWidth;
         g.strokeStyle = buttonBorderColor;
         g.beginPath();

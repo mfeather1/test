@@ -20,7 +20,9 @@ been rotated via mouse/touch.
 When a move button is pressed the cube will "snap" into one of the 24
 possible positions.
 To ensure the correct snap position, rotate so the front face is largest.
-To snap prior to doing a move, use the Snap button.</p>
+To snap prior to doing a move, use the Snap button.
+Keyboard letters can also be used to do moves (click on cube to activate
+keyboard input).</p>
 <div id=c1 style="width:180px; height:180px"></div>
 <br>
 <button onclick="cubeMove('c1','R')">R</button>&nbsp;
@@ -30,12 +32,16 @@ To snap prior to doing a move, use the Snap button.</p>
 <button onclick="cubeMove('c1','F')">F</button>&nbsp;
 <button onclick="cubeMove('c1','B')">B</button>&nbsp;
 <br>
-<button style=margin-top:15px onclick="newPos('c1')">Snap</button>&nbsp;
+<button style=margin-top:15px onclick="cubeMove('c1','X')">X</button>&nbsp;
+<button onclick="cubeMove('c1','Y')">Y</button>&nbsp;
+<button onclick="cubeMove('c1','Z')">Z</button>&nbsp;
+<button onclick="newPos('c1')">Snap</button>&nbsp;
 <button onclick="cubeReset('c1')">Reset</button>
 <br><br>
 <a href=javascript:history.go(-1)>Back</a>
 <br><br>
 <script>
+var gid = '';
 var acjs_cube = [];
 var acjs_startAnimation = [];
 var acjs_stopAnimation = [];
@@ -54,6 +60,7 @@ var acjs_vNorm = [];
 var acjs_vMul = [];
 var acjs_clear = [];
 var acjs_get_var = [];
+var acjs_parNode = [];
 var tmp_pos = {eye:[], eyeX:[], eyeY:[]};
 var cubePosArr = [
   // the 24 cube positions for detecting which position the cube is in
@@ -89,7 +96,7 @@ var reposMove = [
   "X'", "X'Y", "X'Y2", "X'Y'", "X", "XY", "XY2", "XY'",
   "Z'", "Z'Y", "Z'Y2", "Z'Y'", "Z", "ZY", "ZY2", "ZY'"
 ];
-AnimCube3('id=c1&buttonbar=0&counter=0&bgcolor=ffffff&snap=1');
+init();
 function cubeMove(id, mv) {
   if (getPos(id) != 0)
     newPos(id);
@@ -150,6 +157,32 @@ function centerEye(arr){
     arr[i] = i == index ? sign : 0;
   });
   return index;
+}
+function mousedown(e) {
+  if (typeof e.target.parentNode.id != 'undefined') {
+    var s = e.target.parentNode.id;
+    if (typeof acjs_parNode[s] != 'undefined')
+      gid = s; 
+  }
+}
+function keydown(e) {
+  if (gid == '')
+    return;
+  var mlist = ['x','y','z','r','l','u','d','f','b'];
+  if (mlist.includes(e.key)) {
+    var mv = e.key;
+    if (['r','l','u','d','f','b'].includes(mv))
+      mv = mv.toUpperCase();
+    cubeMove(gid, mv);
+  }
+}
+function init() {
+  document.addEventListener("keydown", keydown);
+  document.addEventListener("mousedown", mousedown);
+  AnimCube3('id=c1&buttonbar=0&counter=0&bgcolor=ffffff&snap=1&yz=1');
+  // if using param yz=1, switch y & z in reposMove
+  for (var i=0; i < reposMove.length; i++)
+    reposMove[i] = reposMove[i].replace('Y','y').replace('Z','Y').replace('y','Z');
 }
 </script>
 </center>

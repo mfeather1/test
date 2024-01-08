@@ -10,7 +10,7 @@
   body {margin-left: 10%; margin-right: 10%;}
   p {margin:0; text-align: justify;}
   .tab td {padding-left:2px; padding-right:2px}
-</style>
+ </style>
 </head>
 <body>
 <center>
@@ -81,25 +81,15 @@ var acjs_clear = [];
 var acjs_get_var = [];
 var acjs_put_var = [];
 var acjs_parNode = [];
-var acjs_run = [];
-var params = '&buttonbar=0&counter=0&bgcolor=ffffff&snap=1';
+var params = '&buttonbar=0&counter=0&bgcolor=ffffff&snap=1&yz=1';
 document.addEventListener("keydown", keydown);
 document.addEventListener("mousedown", mousedown);
 AnimCube3('id=c1' + params);
 AnimCube3('id=c2' + params);
 acjs_put_var['c1']('rotateEnabled', 0, 'n');
 function cubeMove(id, mv) {
-  if (acjs_get_var[id]('interruptLevel') == 0) {
-    // use a queue to keep the move array in sync with the
-    // animation for interruptLevel = 0
-    var job = acjs_get_var[id]('jobNumber');
-    run(id, job, mv);
-    acjs_put_var[id]('jobNumber', job+1, 'n');
-  }
-  else { 
-    acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
-    acjs_startAnimation[id](0);
-  }
+  acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
+  acjs_startAnimation[id](0);
 }
 function mousedown(e) {
   if (typeof e.target.parentNode.id != 'undefined') {
@@ -118,16 +108,6 @@ function keydown(e) {
       mv = mv.toUpperCase();
     cubeMove(gid, mv);
   }
-}
-function run(id, job, mv) {
-  var n = acjs_get_var[id]('nowServing');
-  if (job > n) {
-    setTimeout(run, 20, id, job, mv);
-    return;
-  }
-  acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
-  acjs_put_var[id]('moveAnimated', 1, 'n');
-  acjs_run[id](mv, 1);
 }
 function cubeRepos(id) {
   var vCopy = acjs_vCopy[id];

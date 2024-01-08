@@ -18,13 +18,10 @@
 <p>When the stop button is pressed while a sequence is playing the animation
 will stop immediately as as can be seen on the first cube below by pressing
 play and then stop (middle button).
-On the second cube a bit of javascript is used to handle the interrupt so
-that if stop is pressed while a sequence is playing (via the play button)
-animation of the current move will complete instead of stopping immediately
-(pressing stop during a single step move still stops immediately).
+With a bit of javascript, animation of the current move will complete instead
+of stopping immediately as shown on the second cube.
 [note: the second sequence is to show that there is no reset bug, that will
-be removed prior to installing this page on the AnimCubeJS repo].
-</p>
+be removed prior to installing this page on the AnimCubeJS repo].</p>
 <table>
  <tr height=5>
  <tr>
@@ -38,7 +35,7 @@ be removed prior to installing this page on the AnimCubeJS repo].
 letters) will interrupt the currently playing move if entered quickly as
 can be seen on the first cube below.
 With a bit of javascript, input moves do not interrupt animation already
-in progress (they queue up) as can be seen on the second cube.</p>
+in progress as can be seen on the second cube.</p>
 <table>
  <tr>
   <td><div id=c3 style="width:180px; height:180px"></div></td>
@@ -46,7 +43,6 @@ in progress (they queue up) as can be seen on the second cube.</p>
   <td><div id=c4 style="width:180px; height:180px"></div></td>
  </tr>
 </table>
-
 <table class=tab border=0><tr><td width=20>
 <td><button onclick="cubeMove('c3','R')">R</button></td>
 <td><button onclick="cubeMove('c3','L')">L</button></td>
@@ -77,7 +73,7 @@ in progress (they queue up) as can be seen on the second cube.</p>
 <a href=javascript:history.go(-1)>Back</a>
 <br><br>
 <script>
-var gid = 'c1';
+var gid = '';
 var acjs_move = [];
 var acjs_getMove = [];
 var acjs_startAnimation = [];
@@ -96,19 +92,19 @@ var acjs_put_var = [];
 var acjs_parNode = [];
 var acjs_run = [];
 var p1 = '&bgcolor=ffffff&move=R2U2F2L2B2D2;L2D2B2R2U2F2&snap=1&fonttype=0&buttonheight=18&textsize=16';
-var p2 = '&bgcolor=ffffff&buttonbar=0&counter=0&snap=1';
+var p2 = '&bgcolor=ffffff&buttonbar=0&counter=0&snap=1&yz=1';
 document.addEventListener("keydown", keydown);
 document.addEventListener("mousedown", mousedown);
 AnimCube3('id=c1' + p1);
 AnimCube3('id=c2' + p1);
 AnimCube3('id=c3' + p2);
 AnimCube3('id=c4' + p2);
-acjs_put_var['c2']('interruptLevel', 1, 'n');
-acjs_put_var['c4']('interruptLevel', 0, 'n');
+acjs_put_var['c2']('interruptEnabled', 0, 'n');
+acjs_put_var['c4']('interruptEnabled', 0, 'n');
 function cubeMove(id, mv) {
-  if (acjs_get_var[id]('interruptLevel') == 0) {
+  if (acjs_get_var[id]('interruptEnabled') == 0) {
     // use a queue to keep the move array in sync with the
-    // animation for interruptLevel = 0
+    // animation for interruptEnabled = 0
     var job = acjs_get_var[id]('jobNumber');
     run(id, job, mv);
     acjs_put_var[id]('jobNumber', job+1, 'n');
@@ -132,10 +128,13 @@ function mousedown(e) {
   if (typeof e.target.parentNode.id != 'undefined') {
     var s = e.target.parentNode.id;
     if (typeof acjs_parNode[s] != 'undefined')
-      gid = s; 
+      if (s == 'c3' || s == 'c4')
+        gid = s;
   }
 }
 function keydown(e) {
+  if (gid == '')
+    return;
   var mlist = ['x','y','z','r','l','u','d','f','b'];
   if (mlist.includes(e.key)) {
     var mv = e.key;
