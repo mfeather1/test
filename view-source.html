@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+ <title>View Source</title>
  <meta name="author" content="Michael Feather"> 
  <meta name=viewport content="width=device-width, initial-scale=1">
  <style>
@@ -24,6 +25,7 @@ function main() {
     if (typeof(p[1]) != 'undefined')
       window[p[0]] = p[1];
   }
+  document.title = filename;
   readFile(filename, show);
 }
 function show(t) {
