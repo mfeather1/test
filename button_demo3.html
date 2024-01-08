@@ -98,8 +98,7 @@ var reposMove = [
 ];
 init();
 function cubeMove(id, mv) {
-  if (getPos(id) != 0)
-    newPos(id);
+  newPos(id);
   acjs_move[id][0] = acjs_getMove[id](mv, 0)[0]; 
   acjs_startAnimation[id](0);
 }
