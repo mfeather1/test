@@ -33,7 +33,7 @@ For a transparent slider with only a vertical bar showing progress in a
 transparent trough, change the whole line for the third occurrence to the
 following (do not change fillRect to clearRect):
 <br><br>
-graphics.fillRect(progress-dpr, height - progressHeight - dph, dpr+1, progressHeight);
+graphics.fillRect(progress-dpr*2, height - progressHeight - dph, dpr*2, progressHeight);
 <br><br>
 To make the buttonbar transparent change both occurrences of fillRect to
 clearRect in the drawbuttons function (first one is for clear button only,

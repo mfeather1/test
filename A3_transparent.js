@@ -1436,7 +1436,7 @@ function AnimCube3(params) {
             // slider
             graphics.fillStyle = sliderColor;
             // graphics.fillRect(dph, height - progressHeight - dph, progress, progressHeight);
-            graphics.fillRect(progress-dpr, height - progressHeight - dph, dpr+1, progressHeight);
+            graphics.fillRect(progress-dpr*2, height - progressHeight - dph, dpr*2, progressHeight);
 
             // border
             graphics.beginPath();
