@@ -5,7 +5,7 @@
  <meta name=viewport content="width=device-width, initial-scale=1">
  <meta name="author" content="Michael Feather">
  <link rel="icon" href="../../images/favicon.ico" type="image/x-icon">
- <script src=A3_transparent_dark.js></script>
+ <script src=A3_transparent.js></script>
  <style>
   body {
     margin-left: 10%; margin-right: 10%;
@@ -19,43 +19,39 @@
 <center>
 <font size=+2>Transparent Background</font>
 <br><br>
-<p>This cube uses a modified version of AnimCube3.js for transparency
-as described below.</p>
-<div style="width:180px; height:180px">
- <script>AnimCube3("move=RU'LFU'R2U2RUR'U2D'LDF2L2U&movetext=1&buttonheight=16&textsize=14&fonttype=0&scale=1&align=0")</script>
-</div>
-<br>
-<p>Code mods:
+<p>For dark backgrounds the button border, text and highlight colors need
+to be changed, there are two methods:
 <br><br>
-To make the cube background transparent change the first occurrence of 
-fillRect to clearRect in the paint function.
-To make the trough transparent do the same for the second occurrence.
-For a transparent slider with only a vertical bar showing progress in a
-transparent trough, change the whole line for the third occurrence to the
-following (do not change fillRect to clearRect):
+Method 1:
 <br><br>
-graphics.fillRect(progress-dpr*2, height - progressHeight - dph, dpr*2, progressHeight);
-<br><br>
-To make the buttonbar transparent change both occurrences of fillRect to
-clearRect in the drawbuttons function (first one is for clear button only,
-second one is for full buttonbar).
-To make the cube color transparent, in the fixblock function add the
-following line right after where it says: "find and draw black inner faces".
-<br><br>
-graphics.globalCompositeOperation = 'destination-out';
-<br><br>
-Also add the following line right before where it says:
-"draw all visible faces and get dragging regions".
-<br><br>
-graphics.globalCompositeOperation = 'source-over';
-<br><br>
-For dark background, change the button border, text and highlight colors
-by adding the following lines (with colors of your choice) to the init
-function prior to the call to init2:
+Modify AnimCube3.js and add the following lines (with colors of your choice)
+to the init function prior to the call to init2:
 <br><br>
 buttonBorderColor = "white";<br>
 textColor = "white";<br>
-hlColor = "gray";</p>
+hlColor = "gray";
+<br><br>
+Method 2:
+<br><br>
+Use direct access to AnimCube internals to change the colors for the three
+variables shown above.
+This does not require any additional modifications to AnimCube and is the
+method used by this page (view source to see the implementation details).
+</p>
+<div id=c1 style="width:180px; height:180px"></div>
+<script>
+acjs_put_var = [];
+acjs_drawButtonsFunc = [];
+acjs_graphics = [];
+acjs_paint = [];
+AnimCube3("id=c1&transparent=1&move=RU'LFU'R2U2RUR'U2D'LDF2L2U&buttonheight=16&textsize=14&fonttype=0&movetext=1&scale=1&align=0");
+var id = 'c1';
+acjs_put_var[id]('buttonBorderColor', 'white', 's');
+acjs_put_var[id]('textColor', 'white', 's');
+acjs_put_var[id]('hlColor', 'gray', 's');
+acjs_drawButtonsFunc[id](acjs_graphics[id]);
+acjs_paint[id]();
+</script>
 <br>
 <a href=javascript:history.go(-1)>Back</a>
 <br><br>
