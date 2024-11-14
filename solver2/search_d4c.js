@@ -1,5 +1,4 @@
-// Search with 835 MB Dist3 and 1827 MB Dist4 (in addition to Dists 1-2)
-
+// Dist4: 7.14 GB in 4 parts
 function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
 {
   for (var i=0, mv=0; (mv=mvlist[i]) != -1; i++) {
@@ -55,6 +54,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
             return;
           }
           op = get_min_op_3c(cp, ct, op, ix2);
+          /*
           var time1 = Date.now();
           if ((time1-stime0)/1000 >= stl) {
             if (minmv == 99) {
@@ -69,6 +69,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
               done = 1;
             }
           }
+          */
         }
       }
       var cpsym = cp_sym[cp*48+op];
@@ -79,12 +80,21 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
         var ctsym = get_ctsym(cpt, op);
       }
       if (depth-n <= 11 && depth-n >= 9) {
-        var rs = etsym>>5;
-        ix = (cpsym*2187+ctsym)*12512 + epmin*16 + (rs>>2);  // MIN_EP*16 = 12512 
-        var tmp = ((dist4[ix]>>((rs&3)<<1))&3);
+        var rs = etsym>>3;
+        ix = (cpsym*2187+ctsym)*50048 + epmin*64 + (rs>>2);  // MIN_EP*64 = 50048 
+        // p1 = 70*2187*782*16  16 = (8 of 11 et bits = 256) / 4 configs/byte / 4 partitions
+        // p2 = p01*2, p03 = p01*3
+        const p1 = 1915462080, p2 = 3830924160, p3 = 5746386240;
+        tmp = (ix < p2) ? 
+          ((ix < p1) ? dist401[ix]    : dist402[ix-p1]) :
+          ((ix < p3) ? dist403[ix-p2] : dist404[ix-p3]);
+        tmp = (tmp>>((rs&3)<<1))&3;
         dist = (tmp) ? tmp+9+n : 0;
-        if (dist > depth)
+        d4a++;
+        if (dist > depth) {
+          d4b++;
           continue;
+        }
       }
       if (depth-n <= 10 && depth-n >= 8) {
         ix = epmin*1119744 + ctsym*512 + (etsym>>2);  // C_TWIST*512 = 1119744

@@ -47,7 +47,7 @@ var presolved_cube = 0;
 var presolved_dist;
 
 // shared arrays
-var dist1, dist2, dist3, dist4, dist5, dist9, distp2;
+var dist1, dist2, dist3, dist5, dist9, distp2;
 var ept_min_op, ept_min_ops, ept_op_idx;
 var ept_ops_ix1, ept_ops_ix2;
 var ep_mov, cp6c_mov, cpt_min;
@@ -79,10 +79,18 @@ function ipc(e) {
   if (cmd == 'init') {
     worker = e.data.worker;
     postMessage({'cmd': 'msg', 'msg': 'Initializing'});
+    USE_DIST3 = e.data.use_dist3;
+    USE_DIST4 = e.data.use_dist4;
+    USE_DIST5 = e.data.use_dist5;
+    USE_DIST9 = e.data.use_dist9;
     dist1 = new Uint8Array(e.data.dist1);
     dist2 = new Uint8Array(e.data.dist2);
     dist3 = new Uint8Array(e.data.dist3);
-    dist4 = new Uint8Array(e.data.dist4);
+    var n = [0,1,2,4,8,16,32][USE_DIST4];
+    for (var i=1; i <= n; i++) {
+      var s = i.toString().padStart(2,'0');
+      eval('self.dist4' + s + '=new Uint8Array(e.data.dist4' + s + ')');
+    }
     dist9 = new Uint8Array(e.data.dist9);
     distp2 = new Uint8Array(e.data.distp2);
     ept_min_op = new Int8Array(e.data.ept_min_op);
@@ -117,10 +125,6 @@ function ipc(e) {
     dist_gen_depth = e.data.dist_gen_depth;
     conc = e.data.conc;
     use_p2seq = e.data.use_p2seq;
-    USE_DIST3 = e.data.use_dist3;
-    USE_DIST4 = e.data.use_dist4;
-    USE_DIST5 = e.data.use_dist5;
-    USE_DIST9 = e.data.use_dist9;
     if (USE_DIST5)
       dist5 = new Uint8Array(e.data.dist5);
     if (CT_SYM_METHOD == 1)
@@ -208,14 +212,15 @@ function ipc(e) {
 
 function load_search_code()
 {
-  if (USE_DIST3 == 0)
-    importScripts('search.js');
-  else if (USE_DIST4 == 1)
-    importScripts('search_d4.js');
-  else if (USE_DIST3 == 1)
-    importScripts('search_d3a.js');
-  else if (USE_DIST3 == 2)
-    importScripts('search_d3b.js');
+  if (USE_DIST3 == 0)      importScripts('search.js');
+  else if (USE_DIST4 == 1) importScripts('search_d4a.js');
+  else if (USE_DIST4 == 2) importScripts('search_d4b.js');
+  else if (USE_DIST4 == 3) importScripts('search_d4c.js');
+  else if (USE_DIST4 == 4) importScripts('search_d4d.js');
+  else if (USE_DIST4 == 5) importScripts('search_d4e.js');
+  else if (USE_DIST4 == 6) importScripts('search_d4e.js');
+  else if (USE_DIST3 == 1) importScripts('search_d3a.js');
+  else if (USE_DIST3 == 2) importScripts('search_d3b.js');
 }
 
 function solver_main(facelets, worker)
@@ -230,6 +235,7 @@ function solver_main(facelets, worker)
   solve_cube(facelets);
 }
 
+var d4a, d4b;
 function solve_cube(facelets)
 {
   var epr = new Uint8Array(3);
@@ -255,10 +261,11 @@ function solve_cube(facelets)
     var cpr = cp6c_cpr[cp6c];
     var eprn = eprsum(epr);
     presolved_dist = distp2[cpr*13824 + eprn];
+    if (worker == 1)
+      postMessage({'cmd': 'presolved', 'len': presolved_dist});
     if (use_p2seq && presolved_dist < 9) {
       if (worker == 1)
         show_solution_from_p2seq(cpr, eprn);
-      show_time();
       return;
     }
     if (stoplen)
@@ -276,6 +283,7 @@ function solve_cube(facelets)
       break;
     count[0] = count[1] = count[2] = 0;
     count2[0] = count2[1] = count2[2] = 0;
+    d4a = d4b = 0;
     solver_search (ep, et, cp, ct, cp6c, epr, 1, worker_mvlist);
     var stat = (done == 0 && gdone[0] == 0) ? 'completed' : 'stopped';
     if (count[0] > worker_mvlist.length - 1) {
@@ -285,6 +293,8 @@ function solve_cube(facelets)
         document_write('Depth ' + depth + ' ' + stat + ', ' +
           count[0] + ' nodes, ' + count[1] + ' / ' + count[2] + ' tests<br>');
     }
+    if (worker == 2 && d4a > 0)
+      console.log(depth, d4a, d4b, (100*d4b/d4a).toFixed(2));
     if (gdone[0] > 0)
       done = 1;
     else if (done == 0)
@@ -306,7 +316,9 @@ function show_solution_from_p2seq(cpr, epr) {
   var s = solution.join(' ');
   s += ' [0+' + sol_dep2 + '] (' + sol_dep2 + 'f*)';
   document_write(s + '<br>');
+  show_time();
   done = 1;
+  gdone[2] = 1;
 }
 
 function show_time() {
@@ -360,11 +372,13 @@ function show_moves()
   sol_dep1 = depth;
   sol_dep2 = depth2 - adj;
   var s = ' [' + sol_dep1 + '+' + sol_dep2 + '] ';
-  s += '(' + solution.length;
-  s += (sol_dep1 != 0 && sol_dep2 == 0) ? 'f*)' : 'f)' 
-  document_write(s + '<br>');
-  if (presolved_cube && solution.length == presolved_dist)
+  if (presolved_cube && solution.length == presolved_dist) {
     done = 1;
+    gdone[2] = 1;
+    document_write(s + '(' + solution.length + 'f*)<br>');
+  }
+  else 
+    document_write(s + '(' + solution.length + 'f)<br>');
   if (minmv == depth)
     done = 2;
   if (minmv <= stoplen)
@@ -386,8 +400,10 @@ function get_p2_seq(cpr, epr) {
 function chk_sol(cpr, epr) {
   if (cpr == 0 && epr[0] == 0 && epr[1] == 0 && epr[2] == 0) {
     show_optimal_solution();
-    if (presolved_cube && depth == presolved_dist)
+    if (presolved_cube && depth == presolved_dist) {
       done = 1;
+      gdone[2] = 1;
+    }
     else
       done = 2;
     return 1;
@@ -486,7 +502,7 @@ function show_optimal_solution() {
   sol_dep1 = depth;
   sol_dep2 = 0;
   var s = ' [' + sol_dep1 + '+' + sol_dep2 + '] ';
-  document_write(solution.join(' ') + s + '(' + depth + 'f*)<br>');
+  document_write(solution.join(' ') + s + '(' + depth + 'f)<br>');
 }
 
 // ----------------------------------------------------------------------------

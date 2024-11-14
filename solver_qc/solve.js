@@ -41,6 +41,8 @@ var solution = [];
 var uniq_nodes = 244;  // unique 3-color nodes at depth 4
 var show_node_counts = 0;
 var use_p2seq, inv_mv, p2seq, p2idx;
+var presolved_cube = 0;
+var presolved_dist;
 
 // shared arrays
 var dist1, dist2, dist3, dist4, dist9, distp2;
@@ -240,17 +242,22 @@ function solve_cube(facelets)
   auto_extend_search = 0;
   solution.length = 0;
   sol_dep1 = 0; sol_dep2 = 0;
+  presolved_cube = 0;
   var search_depth = (stoplen == 0) ? 20 : stoplen;
   if (ep == 0 && et == 0 && cp == 0 && ct == 0) {
+    presolved_cube = 1;
     var cpr = cp6c_cpr[cp6c];
     var eprn = eprsum(epr);
-    var presolved_dist = distp2[cpr*13824 + eprn];
+    presolved_dist = distp2[cpr*13824 + eprn];
     if (use_p2seq && presolved_dist < 9) {
       if (worker == 1)
         show_solution_from_p2seq(cpr, eprn);
-      show_time();
       return;
     }
+    if (stoplen)
+      minmv = stoplen + 1;
+    else
+      minmv = presolved_dist + 1;
   }
   for (depth = 1; depth <= search_depth; depth++)
   {
@@ -288,7 +295,9 @@ function show_solution_from_p2seq(cpr, epr) {
   var s = solution.join(' ');
   s += ' [0+' + sol_dep2 + '] (' + sol_dep2 + 'f*)';
   document_write(s + '<br>');
+  show_time();
   done = 1;
+  gdone[2] = 1;
 }
 
 function show_time() {
@@ -342,9 +351,13 @@ function show_moves()
   sol_dep1 = depth;
   sol_dep2 = depth2 - adj;
   var s = ' [' + sol_dep1 + '+' + sol_dep2 + '] ';
-  s += '(' + solution.length;
-  s += (sol_dep1 != 0 && sol_dep2 == 0) ? 'f*)' : 'f)' 
-  document_write(s + '<br>');
+  if (presolved_cube && solution.length == presolved_dist) {
+    done = 1;
+    gdone[2] = 1;
+    document_write(s + '(' + solution.length + 'f*)<br>');
+  }
+  else 
+    document_write(s + '(' + solution.length + 'f)<br>');
   if (minmv == depth)
     done = 2;
   if (minmv <= stoplen)
@@ -366,7 +379,12 @@ function get_p2_seq(cpr, epr) {
 function chk_sol(cpr, epr) {
   if (cpr == 0 && epr[0] == 0 && epr[1] == 0 && epr[2] == 0) {
     show_optimal_solution();
-    done = 2;
+    if (presolved_cube && depth == presolved_dist) {
+      done = 1;
+      gdone[2] = 1;
+    }
+    else
+      done = 2;
     return 1;
   }
   return 0;
@@ -463,7 +481,7 @@ function show_optimal_solution() {
   sol_dep1 = depth;
   sol_dep2 = 0;
   var s = ' [' + sol_dep1 + '+' + sol_dep2 + '] ';
-  document_write(solution.join(' ') + s + '(' + depth + 'f*)<br>');
+  document_write(solution.join(' ') + s + '(' + depth + 'f)<br>');
 }
 
 // ----------------------------------------------------------------------------

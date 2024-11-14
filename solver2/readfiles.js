@@ -12,8 +12,18 @@ function init_fnames() {
     var dep3 = ((dist3_gen_depth < 10) ? '0' : '') + dist3_gen_depth;
     fnames[n++] = 'Dist3_' + dep3 + 'F' + (USE_DIST3==2?'Q':'') + '.dat'; 
   }
-  if (USE_DIST4)
-    fnames[n++] = 'Dist4_11F.dat';
+  if (USE_DIST4) {
+    if (USE_DIST4 == 1)
+      fnames[n++] = 'Dist4_11F.dat';
+    else {
+      var d4n = dist4_parts[USE_DIST4];
+      for (var i=1; i <= d4n; i++) {
+        var n1 = d4n.toString().padStart(2,'0'); 
+        var n2 = i.toString().padStart(2,'0');
+        fnames[n++] = 'Dist4_11F_' + n1 + n2 + '.dat';
+      }
+    }
+  }
   if (USE_DIST5)
     fnames[n++] = 'Dist5_11F.dat';
   fnames[n] = 'DistP2_' + dep2 + 'F.dat'; 
@@ -147,11 +157,18 @@ function load_dist3(file) {
 }
 
 function load_dist4(file, ix) {
+  console.log(file.name, file.size);
   var fileSize = file.size;
   var bufSize = file.size/32;
   var offset = 0;
   var readbuf = null;
-  var d4s = new Uint8Array(dist4_shared);
+  var d4s;
+  if (USE_DIST4 == 1)
+    d4s = new Uint8Array(dist401_shared);
+  else {
+    var n = file.name.substring(12,14);
+    eval('d4s = new Uint8Array(dist4' + n + '_shared)');
+  }
   var readEventHandler = function(e) {
     if (e.target.error == null) {
       var buf = new Uint8Array(e.target.result);
@@ -159,7 +176,7 @@ function load_dist4(file, ix) {
         d4s[offset+i] = buf[i];
       offset += buf.length; 
     } else {
-      console.log("Dist4 Read Error: " + e.target.error);
+      console.log("Dist4 Read Error: ", e.target.error, file.name);
       return;
     }
     if (offset >= fileSize) {
