@@ -62,6 +62,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
             return;
           }
           op = get_min_op_3c(cp, ct, op, ix2);
+          /*
           var time1 = Date.now();
           if ((time1-stime0)/1000 >= stl) {
             if (minmv == 99) {
@@ -76,6 +77,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
               done = 1;
             }
           }
+          */
         }
       }
       var cpsym = cp_sym[cp*48+op];

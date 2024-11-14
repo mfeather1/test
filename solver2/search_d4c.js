@@ -90,9 +90,9 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
           ((ix < p3) ? dist403[ix-p2] : dist404[ix-p3]);
         tmp = (tmp>>((rs&3)<<1))&3;
         dist = (tmp) ? tmp+9+n : 0;
-        d4a++;
+        // d4a++;
         if (dist > depth) {
-          d4b++;
+          // d4b++;
           continue;
         }
       }

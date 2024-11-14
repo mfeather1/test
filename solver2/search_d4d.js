@@ -60,6 +60,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
             return;
           }
           op = get_min_op_3c(cp, ct, op, ix2);
+          /*
           var time1 = Date.now();
           if ((time1-stime0)/1000 >= stl) {
             if (minmv == 99) {
@@ -74,6 +75,7 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
               done = 1;
             }
           }
+          */
         }
       }
       var cpsym = cp_sym[cp*48+op];
@@ -95,9 +97,9 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
             ((ix < p7) ? tmp = dist407[ix-p6] : tmp = dist408[ix-p7]));
         tmp = (tmp>>((rs&3)<<1))&3;
         dist = (tmp) ? tmp+9+n : 0;
-        d4a++;
+        // d4a++;
         if (dist > depth) {
-          d4b++;
+          // d4b++;
           continue;
         }
       }

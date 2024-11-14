@@ -87,9 +87,9 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
         var tmp = (ix < p) ? dist401[ix] : dist402[ix-p];
         tmp = (tmp>>((rs&3)<<1))&3;
         dist = (tmp) ? tmp+9+n : 0;
-        d4a++;
+        // d4a++;
         if (dist > depth) {
-          d4b++;
+          // d4b++;
           continue;
         }
       }

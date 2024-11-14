@@ -84,9 +84,9 @@ function solver_search(epn, etn, cpn, ctn, cp6cn, eprn, n, mvlist)
         ix = (cpsym*2187+ctsym)*12512 + epmin*16 + (rs>>2);  // MIN_EP*16 = 12512 
         var tmp = ((dist401[ix]>>((rs&3)<<1))&3);
         dist = (tmp) ? tmp+9+n : 0;
-        d4a++;
+        // d4a++;
         if (dist > depth) {
-          d4b++;
+          // d4b++;
           continue;
         }
       }

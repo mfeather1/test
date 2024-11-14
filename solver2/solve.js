@@ -235,7 +235,7 @@ function solver_main(facelets, worker)
   solve_cube(facelets);
 }
 
-var d4a, d4b;
+// var d4a, d4b;
 function solve_cube(facelets)
 {
   var epr = new Uint8Array(3);
@@ -283,7 +283,7 @@ function solve_cube(facelets)
       break;
     count[0] = count[1] = count[2] = 0;
     count2[0] = count2[1] = count2[2] = 0;
-    d4a = d4b = 0;
+    // d4a = d4b = 0;
     solver_search (ep, et, cp, ct, cp6c, epr, 1, worker_mvlist);
     var stat = (done == 0 && gdone[0] == 0) ? 'completed' : 'stopped';
     if (count[0] > worker_mvlist.length - 1) {
@@ -293,8 +293,8 @@ function solve_cube(facelets)
         document_write('Depth ' + depth + ' ' + stat + ', ' +
           count[0] + ' nodes, ' + count[1] + ' / ' + count[2] + ' tests<br>');
     }
-    if (worker == 2 && d4a > 0)
-      console.log(depth, d4a, d4b, (100*d4b/d4a).toFixed(2));
+    // if (worker == 2 && d4a > 0)
+    //   console.log(depth, d4a, d4b, (100*d4b/d4a).toFixed(2));
     if (gdone[0] > 0)
       done = 1;
     else if (done == 0)
